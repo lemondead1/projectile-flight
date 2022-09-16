@@ -1,0 +1,11 @@
+/out
+
+/build
+
+/.idea
+
+/.gradle
+
+/engine/out
+
+/engine/build

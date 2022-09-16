@@ -1,0 +1,63 @@
+plugins {
+    id 'application'
+    id 'idea'
+}
+
+group "${group}"
+version "${version}"
+application.mainClassName 'lemondead.projectileflight.Main'
+
+configurations {
+    implementation {
+        canBeResolved = true
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.jbox2d', name: 'jbox2d-library', version: '2.2.1.+'
+
+    compileOnly group: 'org.jetbrains', name: 'annotations', version: '13.+'
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-assimp"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-stb"
+
+    for (String os : ['linux', 'windows', 'macos', 'windows-x86']) {
+        implementation "org.lwjgl:lwjgl::natives-${os}"
+        implementation "org.lwjgl:lwjgl-assimp::natives-${os}"
+        implementation "org.lwjgl:lwjgl-glfw::natives-${os}"
+        implementation "org.lwjgl:lwjgl-openal::natives-${os}"
+        implementation "org.lwjgl:lwjgl-opengl::natives-${os}"
+        implementation "org.lwjgl:lwjgl-stb::natives-${os}"
+    }
+
+    implementation 'com.cathive.fonts:fonts-roboto:2012023.1'
+
+    implementation project(":engine")
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': application.mainClassName)
+    }
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    exclude {
+        def str = it.toString()
+        str.contains('fastutil') && !(str.contains('floats') || str.contains('ints'))
+    }
+}
